@@ -50,6 +50,12 @@ public class Invoice {
 		this.discount = discount;
 	}
 	
+	public int getTotal() {
+		return 0;
+	}
+	public int getNetPayableAmount() {
+		return getTotal() - discount;
+	}
 	
 
 }

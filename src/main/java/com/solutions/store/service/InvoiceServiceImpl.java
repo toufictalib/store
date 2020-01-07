@@ -1,20 +1,17 @@
 package com.solutions.store.service;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.solutions.store.bean.AffiliateDiscount;
-import com.solutions.store.bean.Discount;
-import com.solutions.store.bean.DiscountPerOneHundred;
-import com.solutions.store.bean.EmployeeDiscount;
-import com.solutions.store.bean.UserOverTwoYears;
+import com.solutions.store.bean.Provider;
 import com.solutions.store.dao.EmployeeRepository;
 import com.solutions.store.dao.InvoiceRepository;
+import com.solutions.store.dicount.Discount;
 import com.solutions.store.model.CategoryWithoutDiscount;
 import com.solutions.store.model.Invoice;
 
@@ -28,16 +25,17 @@ public class InvoiceServiceImpl implements InvoiceService {
 	InvoiceRepository invoiceRepository;
 	
 	@Override
-	public Invoice getInvoice(int id) {
-		Invoice invoice = invoiceRepository.findById(2);
+	public Optional<Invoice> getInvoice(int id) {
+		Invoice invoice = invoiceRepository.findById(id);
 		
-		List<CategoryWithoutDiscount> categoryWithoutDiscounts = CategoryWithoutDiscount.list();
+		if(invoice==null) {
+			return Optional.empty();
+		}
+		
+		List<CategoryWithoutDiscount> categoryWithoutDiscounts = Provider.listOfCategoryWithoutDiscount();
 		Set<Integer> categoriesWithoutDiscountIds = categoryWithoutDiscounts.stream().map(e->e.getCategory().getId()).collect(Collectors.toSet());
-		List<Discount> discounts = new ArrayList<>();
-		discounts.add(new EmployeeDiscount(invoice, categoriesWithoutDiscountIds));
-		discounts.add(new AffiliateDiscount(invoice, categoriesWithoutDiscountIds));
-		discounts.add(new DiscountPerOneHundred(invoice, categoriesWithoutDiscountIds));
-		discounts.add(new UserOverTwoYears(invoice, categoriesWithoutDiscountIds));
+		
+		List<Discount> discounts = Provider.discounts(invoice, categoriesWithoutDiscountIds);
 		
 		int discountAmount  = 0;
 		for(Discount discount : discounts) {
@@ -52,7 +50,7 @@ public class InvoiceServiceImpl implements InvoiceService {
 		
 		invoiceRepository.add(invoice);
 		
-		return invoice;
+		return Optional.of(invoice);
 		
 	}
 	

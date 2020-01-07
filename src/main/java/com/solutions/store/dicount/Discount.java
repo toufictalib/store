@@ -1,7 +1,8 @@
-package com.solutions.store.bean;
+package com.solutions.store.dicount;
 
 import java.util.Set;
 
+import com.solutions.store.bean.Item;
 import com.solutions.store.model.Invoice;
 
 public abstract class Discount {

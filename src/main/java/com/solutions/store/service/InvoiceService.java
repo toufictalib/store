@@ -1,10 +1,12 @@
 package com.solutions.store.service;
 
+import java.util.Optional;
+
 import com.solutions.store.model.Invoice;
 
 public interface InvoiceService {
 
-	Invoice getInvoice(int id);
+	Optional<Invoice> getInvoice(int id);
 
 	
 }

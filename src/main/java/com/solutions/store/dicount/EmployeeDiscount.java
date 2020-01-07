@@ -1,4 +1,4 @@
-package com.solutions.store.bean;
+package com.solutions.store.dicount;
 
 import java.util.Set;
 
