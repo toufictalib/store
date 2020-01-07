@@ -3,6 +3,7 @@ package com.solutions.store.bean;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import com.solutions.store.dicount.AffiliateDiscount;
 import com.solutions.store.dicount.Discount;
@@ -29,35 +30,59 @@ public class Provider {
 
 		return list;
 	}
-	
-	public static List<Discount> discounts(Invoice invoice, Set<Integer> categoriesWithoutDiscountIds){
+
+	public static List<Discount> discounts(Invoice invoice) {
 		List<Discount> discounts = new ArrayList<>();
-		discounts.add(new EmployeeDiscount(invoice, categoriesWithoutDiscountIds));
-		discounts.add(new AffiliateDiscount(invoice, categoriesWithoutDiscountIds));
-		discounts.add(new DiscountPerOneHundred(invoice, categoriesWithoutDiscountIds));
-		discounts.add(new UserOverTwoYears(invoice, categoriesWithoutDiscountIds));
+
+		// create a copy of invoice to avoid affecting the real instancce
+		Invoice copyInvoice = invoice.clone();
+
+		// filter all items that not support discount
+		List<Item> filteredItems = filter(copyInvoice.getItems());
+		// remove items from copy
+		copyInvoice.removeItems();
+		// add filtered items to copied instance
+		copyInvoice.addItems(filteredItems);
+
+		// discounts
+		discounts.add(new EmployeeDiscount(copyInvoice));
+		discounts.add(new AffiliateDiscount(copyInvoice));
+		discounts.add(new DiscountPerOneHundred(copyInvoice));
+		discounts.add(new UserOverTwoYears(copyInvoice));
 		return discounts;
 	}
 	
-	public static Invoice createAffiliateInvoice(Product ...  products) {
+	private static List<Item> filter(List<Item> items) {
+		// list of categories that not support discount
+		List<CategoryWithoutDiscount> categoryWithoutDiscounts = Provider.listOfCategoryWithoutDiscount();
+		// convert category to Set because Set of id complexity is one(High
+		// performance)
+		Set<Integer> categoriesWithoutDiscountIds = categoryWithoutDiscounts.stream().map(e -> e.getCategory().getId())
+				.collect(Collectors.toSet());
+
+		return items.stream().filter(e -> !categoriesWithoutDiscountIds.contains(e.getCategory().getId()))
+				.collect(Collectors.toList());
+	}
+
+	public static Invoice createAffiliateInvoice(Product... products) {
 		// affiliate
 		User affiliate = new Affiliate();
-		Invoice invoice2 = new Invoice(2, affiliate);
+		Invoice invoice2 = new Invoice(affiliate);
 		invoice2.addItem(products[0], 3);
 		invoice2.addItem(products[1], 1);
 		invoice2.addItem(products[2], 2);
 		return invoice2;
 	}
 
-	public static Invoice createEmployeeInvoice(Product ...  products) {
+	public static Invoice createEmployeeInvoice(Product... products) {
 		// employee
 		User employee = new Employee();
-		Invoice invoice = new Invoice(1, employee);
+		Invoice invoice = new Invoice(employee);
 		invoice.addItem(products[0], 2);
 		invoice.addItem(products[1], 1);
 		return invoice;
 	}
-	
+
 	public static List<Product> products() {
 		List<Product> products = new ArrayList<>();
 

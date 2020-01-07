@@ -8,15 +8,17 @@ import com.solutions.store.bean.Item;
 
 public class Invoice {
 
-	private final int id;
+	private int id;
 	private final User user;
 	private final List<Item> items;
 	private int discount;
-	private final LocalDateTime creationDate;
+	private LocalDateTime creationDate;
 
-	public Invoice(int id, User user) {
+	private static int CTR = 1;
+
+	public Invoice(User user) {
 		super();
-		this.id = id;
+		this.id = CTR++;
 		this.user = user;
 		this.items = new ArrayList<>();
 		this.creationDate = LocalDateTime.now();
@@ -38,8 +40,16 @@ public class Invoice {
 		return creationDate;
 	}
 	
+	public void removeItems() {
+		items.clear();
+	}
+
 	public void addItem(Product product, int quantity) {
 		items.add(new Item(product, quantity));
+	}
+
+	public void addItems(List<Item> items) {
+		this.items.addAll(items);
 	}
 
 	public int getDiscount() {
@@ -57,5 +67,14 @@ public class Invoice {
 		return getTotal() - discount;
 	}
 	
+	public Invoice clone() {
+		Invoice invoice = new Invoice(this.user);
+		invoice.id = this.id;
+		invoice.addItems(this.items);
+		invoice.discount = this.discount;
+		invoice.creationDate = creationDate;
+
+		return invoice;
+	}
 
 }

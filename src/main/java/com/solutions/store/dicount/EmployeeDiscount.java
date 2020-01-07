@@ -1,14 +1,12 @@
 package com.solutions.store.dicount;
 
-import java.util.Set;
-
 import com.solutions.store.model.Employee;
 import com.solutions.store.model.Invoice;
 
 public class EmployeeDiscount extends Discount {
 
-	public EmployeeDiscount(Invoice invoice, Set<Integer> categoryWithoutDiscounts) {
-		super(invoice, categoryWithoutDiscounts);
+	public EmployeeDiscount(Invoice discountInput) {
+		super(discountInput);
 	}
 
 	@Override
@@ -16,7 +14,7 @@ public class EmployeeDiscount extends Discount {
 
 		if (invoice.getUser() instanceof Employee) {
 			hasDiscount = true;
-			return getAmountSupportDiscount() * 30 / 100;
+			return invoice.getTotal() * 30 / 100;
 		}
 		return 0;
 
