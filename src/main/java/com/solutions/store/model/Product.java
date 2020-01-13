@@ -1,8 +1,7 @@
 package com.solutions.store.model;
 
-public class Product {
+public class Product extends BaseEntity {
 
-	private int id;
 	private String name;
 	private int price;
 	private Category category;
@@ -12,20 +11,12 @@ public class Product {
 	}
 
 	public Product(int id, String name, int price, Category category) {
-		super();
-		this.id = id;
+		super(id);
 		this.name = name;
 		this.price = price;
 		this.category = category;
 	}
 
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
-	}
 
 	public String getName() {
 		return name;

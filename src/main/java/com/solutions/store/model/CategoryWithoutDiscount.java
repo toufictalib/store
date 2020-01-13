@@ -1,6 +1,6 @@
 package com.solutions.store.model;
 
-public class CategoryWithoutDiscount {
+public class CategoryWithoutDiscount extends BaseEntity {
 
 	private final Category category;
 

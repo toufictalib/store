@@ -11,6 +11,6 @@ public interface InvoiceService {
 
 	Optional<Invoice> getInvoice(int id);
 
-	Optional<Invoice> addInvoice(User user, List<Item> items);
+	Invoice createInvoice(User user, List<Item> items);
 	
 }

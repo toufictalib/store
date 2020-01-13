@@ -1,24 +1,15 @@
 package com.solutions.store.dicount;
 
-import java.time.LocalDate;
-import java.time.temporal.ChronoUnit;
+public class UserOverTwoYears implements IDiscount {
 
-import com.solutions.store.model.Invoice;
-
-public class UserOverTwoYears extends Discount {
-
-	public UserOverTwoYears(Invoice invoice) {
-		super(invoice);
+	public UserOverTwoYears() {
+		super();
 	}
 
-	@Override
-	public int getDiscountAmount() {
 
-		if (invoice.getUser().getCreationDate().until(LocalDate.now(), ChronoUnit.YEARS) > 2) {
-			hasDiscount = true;
-			return invoice.getTotal() * 5 / 100;
-		}
-		return 0;
+	@Override
+	public int apply(int amount) {
+		return amount * 5 / 100;
 	}
 
 }

@@ -2,28 +2,19 @@ package com.solutions.store.model;
 
 import java.time.LocalDate;
 
-public class User {
+public class User extends BaseEntity {
 
-	private int id;
 	private String name;
 	private LocalDate creationDate;
 	
 	public User() {
-
+		this.creationDate = LocalDate.now();
 	}
 
 	public User(int id, String name) {
-		super();
-		this.id = id;
+		super(id);
+		this.creationDate = LocalDate.now();
 		this.name = name;
-	}
-
-	public int getId() {
-		return id;
-	}
-
-	public void setId(int id) {
-		this.id = id;
 	}
 
 	public String getName() {
